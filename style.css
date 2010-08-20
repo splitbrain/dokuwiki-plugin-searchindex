@@ -1,0 +1,12 @@
+#pl_si_throbber {
+    visibility: hidden;
+}
+
+.pl_si_out {
+    margin: 1em auto 1em auto;
+    vertical-align: middle;
+    width: 80%;
+    text-align: left;
+}
+
+// Setup VIM: ex: et ts=4 enc=utf-8 :
