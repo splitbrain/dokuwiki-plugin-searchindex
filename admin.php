@@ -53,7 +53,7 @@ class admin_plugin_searchindex extends DokuWiki_Admin_Plugin {
         print '<fieldset class="pl_si_out">';
         
         print '<button class="button" id="pl_si_gobtn" onclick="plugin_searchindex_go()">';
-        print 'Rebuild Index'; #FIXME localize
+        print $this->getLang('rebuild_index');
         print '</button>';
         print '<span id="pl_si_out"></span>';
         print '<img src="'.DOKU_BASE.'lib/images/loading.gif" id="pl_si_throbber" />';
