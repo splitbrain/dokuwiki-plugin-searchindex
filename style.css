@@ -1,12 +1,11 @@
-#pl_si_throbber {
-    visibility: hidden;
-}
 
-.pl_si_out {
-    margin: 1em auto 1em auto;
+#plugin__searchindex {
+    border: solid 1px __border__;
+    padding: 2em;
+    margin: 2em auto 1em auto;
     vertical-align: middle;
     width: 80%;
-    text-align: left;
+    text-align: center;
 }
 
 // Setup VIM: ex: et ts=4 enc=utf-8 :
