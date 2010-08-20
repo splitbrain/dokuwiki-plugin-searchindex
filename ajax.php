@@ -73,10 +73,16 @@ function ajax_clearindex(){
 
     }
 
-    //clear all index files
-    io_saveFile($conf['cachedir'].'/word.idx','');
-    io_saveFile($conf['cachedir'].'/page.idx','');
-    io_saveFile($conf['cachedir'].'/index.idx','');
+    io_saveFile($conf['indexdir'].'/page.idx','');
+    io_saveFile($conf['indexdir'].'/title.idx','');
+    $dir = @opendir($conf['indexdir']);
+    if($dir!==false){
+        while(($f = readdir($dir)) !== false){
+            if(substr($f,-4)=='.idx' &&
+               (substr($f,0,1)=='i' || substr($f,0,1)=='w'))
+                @unlink($conf['indexdir']."/$f");
+        }
+    }
 
     // we're finished
     @rmdir($lock);
@@ -121,8 +127,7 @@ function ajax_indexpage(){
     io_saveFile(metaFN($id,'.indexed'),'');
     @rmdir($lock);
 
-    print 1; 
+    print 1;
 }
 
 //Setup VIM: ex: et ts=4 enc=utf-8 :
-?>
