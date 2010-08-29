@@ -19,10 +19,12 @@ var pl_si = {
      * initialize everything
      */
     init: function(){
+        pl_si.output = $('plugin__searchindex');
+        if(!pl_si.output) return;
+
         pl_si.sack = new sack(DOKU_BASE + 'lib/plugins/searchindex/ajax.php');
         pl_si.sack.AjaxFailedAlert = '';
         pl_si.sack.encodeURIString = false;
-        pl_si.output = $('plugin__searchindex');
         pl_si.lang = LANG.plugins.searchindex;
 
         // init interface
