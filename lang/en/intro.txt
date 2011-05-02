@@ -5,7 +5,7 @@ This isn't needed generally as  the index builds and updates itself while
 users browse your wiki. However if you just upgraded, added or removed
 a lot of files it may be a good idea to cleanup the the index.
 
-This Manager needs a recent Browser as it makes use of modern JavaScript
+This manager needs a recent browser as it makes use of modern JavaScript
 to carry out multiple tasks in the background (using [[wp>AJAX]]).
 
 Rebuilding the index takes a long time. You should leave the page open

@@ -15,5 +15,3 @@ $lang['js']['clearing'] = 'Clearing index...';
 $lang['js']['finding']  = 'Finding pages...';
 
 
-
-//Setup VIM: ex: et ts=4 enc=utf-8 :

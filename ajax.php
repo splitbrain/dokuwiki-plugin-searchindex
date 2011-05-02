@@ -60,7 +60,7 @@ function ajax_clearindex(){
     // keep running
     @ignore_user_abort(true);
 
-    // try to aquire a lock
+    // acquire a lock
     $lock = $conf['lockdir'].'/_indexer.lock';
     while(!@mkdir($lock)){
         if(time()-@filemtime($lock) > 60*5){
@@ -70,7 +70,6 @@ function ajax_clearindex(){
             print 'indexer is locked.';
             exit;
         }
-
     }
 
     io_saveFile($conf['indexdir'].'/page.idx','');
@@ -107,27 +106,29 @@ function ajax_indexpage(){
     // keep running
     @ignore_user_abort(true);
 
-    // try to aquire a lock
-    $lock = $conf['lockdir'].'/_indexer.lock';
-    while(!@mkdir($lock)){
-        if(time()-@filemtime($lock) > 60*5){
-            // looks like a stale lock - remove it
-            @rmdir($lock);
-        }else{
-            print 'indexer is locked.';
-            exit;
+    // try to aquire a lock (newer releases do the locking in idx_addPage)
+    if(INDEXER_VERSION < 4){
+        $lock = $conf['lockdir'].'/_indexer.lock';
+        while(!@mkdir($lock)){
+            if(time()-@filemtime($lock) > 60*5){
+                // looks like a stale lock - remove it
+                @rmdir($lock);
+            }else{
+                print 'indexer is locked.';
+                exit;
+            }
         }
-
     }
 
     // do the work
-    idx_addPage($_POST['page']);
+    idx_addPage($_POST['page'], false, true);
 
     // we're finished
-    io_saveFile(metaFN($id,'.indexed'),'');
-    @rmdir($lock);
+    if(INDEXER_VERSION < 4){
+        io_saveFile(metaFN($id,'.indexed'),'');
+        @rmdir($lock);
+    }
 
     print 1;
 }
 
-//Setup VIM: ex: et ts=4 enc=utf-8 :
