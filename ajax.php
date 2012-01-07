@@ -125,7 +125,7 @@ function ajax_indexpage(){
     }
 
     // do the work
-    idx_addPage($_POST['page'], false, true);
+    $success = idx_addPage($_POST['page'], false, false);
 
     // we're finished
     if(INDEXER_VERSION < 4){
@@ -133,6 +133,6 @@ function ajax_indexpage(){
         @rmdir($lock);
     }
 
-    print 1;
+    print ($success !== false) ? 1 : 0;
 }
 
