@@ -31,9 +31,9 @@ if (auth_quickaclcheck($conf['start']) < AUTH_ADMIN){
 
 //call the requested function
 $call = 'ajax_'.$_POST['call'];
-if(function_exists($call)){
+if (function_exists($call)) {
     $call();
-}else{
+} else {
     print "The called function '".htmlspecialchars($call)."' does not exist!";
 }
 
@@ -45,9 +45,9 @@ if(function_exists($call)){
 function ajax_pagelist(){
     global $conf;
     $data = array();
-    search($data,$conf['datadir'],'search_allpages',array());
+    search($data,$conf['datadir'], 'search_allpages', array());
 
-    foreach($data as $val){
+    foreach($data as $val) {
         print $val['id']."\n";
     }
 }
@@ -55,18 +55,18 @@ function ajax_pagelist(){
 /**
  * Clear all index files
  */
-function ajax_clearindex(){
+function ajax_clearindex() {
     global $conf;
     // keep running
     @ignore_user_abort(true);
 
     // acquire a lock
-    $lock = $conf['lockdir'].'/_indexer.lock';
-    while(!@mkdir($lock)){
-        if(time()-@filemtime($lock) > 60*5){
+    $lock = $conf['lockdir'] . '/_indexer.lock';
+    while (!@mkdir($lock)){
+        if (time()-@filemtime($lock) > 60*5) {
             // looks like a stale lock - remove it
             @rmdir($lock);
-        }else{
+        } else {
             print 'indexer is locked.';
             exit;
         }
@@ -77,9 +77,9 @@ function ajax_clearindex(){
     io_saveFile($conf['indexdir'].'/pageword.idx','');
     io_saveFile($conf['indexdir'].'/metadata.idx','');
     $dir = @opendir($conf['indexdir']);
-    if($dir!==false){
-        while(($f = readdir($dir)) !== false){
-            if(substr($f,-4)=='.idx' &&
+    if ($dir!==false) {
+        while (($f = readdir($dir)) !== false) {
+            if (substr($f,-4)=='.idx' &&
                (substr($f,0,1)=='i' || substr($f,0,1)=='w'
                || substr($f,-6)=='_w.idx' || substr($f,-6)=='_i.idx' || substr($f,-6)=='_p.idx'))
                 @unlink($conf['indexdir']."/$f");
@@ -90,7 +90,7 @@ function ajax_clearindex(){
     // we're finished
     @rmdir($lock);
 
-    print 1;
+    print 'true';
 }
 
 /**
@@ -99,11 +99,11 @@ function ajax_clearindex(){
  * We're doing basicly the same as the real indexer but ignore the
  * last index time here
  */
-function ajax_indexpage(){
+function ajax_indexpage() {
     global $conf;
 
-    if(!$_POST['page']){
-        print 1;
+    if (!$_POST['page']) {
+        print 'true';
         exit;
     }
 
@@ -111,13 +111,13 @@ function ajax_indexpage(){
     @ignore_user_abort(true);
 
     // try to aquire a lock (newer releases do the locking in idx_addPage)
-    if(INDEXER_VERSION < 4){
+    if (INDEXER_VERSION < 4){
         $lock = $conf['lockdir'].'/_indexer.lock';
-        while(!@mkdir($lock)){
-            if(time()-@filemtime($lock) > 60*5){
+        while (!@mkdir($lock)){
+            if (time()-@filemtime($lock) > 60*5) {
                 // looks like a stale lock - remove it
                 @rmdir($lock);
-            }else{
+            } else {
                 print 'indexer is locked.';
                 exit;
             }
@@ -128,11 +128,11 @@ function ajax_indexpage(){
     $success = idx_addPage($_POST['page'], false, false);
 
     // we're finished
-    if(INDEXER_VERSION < 4){
+    if (INDEXER_VERSION < 4){
         io_saveFile(metaFN($id,'.indexed'),'');
         @rmdir($lock);
     }
 
-    print ($success !== false) ? 1 : 0;
+    print ($success !== false) ? 'true' : '';
 }
 

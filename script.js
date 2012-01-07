@@ -57,7 +57,7 @@ var plugin_searchindex = (function() {
             jQuery.post(url, 'call=indexpage&page=' + encodeURI(page), function(response) {
                 var wait = 250;
                 var status = lang.indexed;
-                if (response !== 1) {
+                if (response !== 'true') {
                     // either up-to-date or error: skipped
                     status = '<p class="status">' + lang.notindexed + '</p>';
                 }
@@ -89,10 +89,13 @@ var plugin_searchindex = (function() {
     var clear = function() {
         message(lang.clearing);
         jQuery.post(url, 'call=clearindex', function(response) {
-            if (response !== 1) {
+            if (response !== 'true') {
                 message(response);
                 // retry
                 window.setTimeout(clear,5000);
+            } else {
+                // start indexing
+                window.setTimeout(index,1000);
             }
         });
     };
@@ -109,7 +112,7 @@ var plugin_searchindex = (function() {
         throbber_on();
         message(lang.finding);
         jQuery.post(url, 'call=pagelist', function(response) {
-            if (response != 1) {
+            if (response !== 'true') {
                 pages = response.split("\n");
                 count = pages.length;
                 message(lang.pages.replace(/%d/, pages.length));
@@ -118,10 +121,12 @@ var plugin_searchindex = (function() {
                 page = pages.shift();
 
                 // complete index rebuild?
-                if (rebuild === true) clear();
-
-                // start indexing
-                window.setTimeout(index,1000);
+                if (rebuild === true) {
+                    clear();
+                } else {
+                    // just start indexing
+                    window.setTimeout(index,1000);
+                }
             } else {
                 finished();
             }

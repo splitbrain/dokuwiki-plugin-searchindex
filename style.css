@@ -19,8 +19,8 @@
     float: left;
 }
 #plugin__searchindex .msg {
-    color: #A0A0A0;
-    border: 0px solid #D7D5D4;
+    color: __text__;
+    border: 0px solid __border__;
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -39,7 +39,7 @@
     font-weight: bold;
 }
 #plugin__searchindex .msg p.status {
-    color: #D7D5D4;
+    color: __text_neu__;
     font-style: italic;
 }
 
