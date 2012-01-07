@@ -21,6 +21,7 @@ var plugin_searchindex = (function() {
         $msg = null,
         $buttons = null,
         lang = null;
+        force = '';
 
     /**
      * initialize everything
@@ -54,17 +55,14 @@ var plugin_searchindex = (function() {
      */
     var index = function() {
         if (page) {
-            jQuery.post(url, 'call=indexpage&page=' + encodeURI(page), function(response) {
+            jQuery.post(url, 'call=indexpage&page=' + encodeURI(page) + '&force=' + force, function(response) {
                 var wait = 250;
-                var status = lang.indexed;
-                if (response !== 'true') {
-                    // either up-to-date or error: skipped
-                    status = '<p class="status">' + lang.notindexed + '</p>';
-                }
                 // next page from queue
                 page = pages.shift();
                 done++;
 
+                var msg = (response !== 'true') ? lang.notindexed : lang.indexed;
+                status = '<p class="status">' + msg + '</p>';
                 message('<p>' + lang.indexing + ' ' + done + '/' + count + '</p><p class="name">' + page + '</p>' + status);
                 // next index run
                 window.setTimeout(index, wait);
@@ -95,6 +93,7 @@ var plugin_searchindex = (function() {
                 window.setTimeout(clear,5000);
             } else {
                 // start indexing
+                force = 'true';
                 window.setTimeout(index,1000);
             }
         });
@@ -107,6 +106,7 @@ var plugin_searchindex = (function() {
      * Starts the index update
      */
     pub.update = function(rebuild) {
+        done = 1;
         rebuild = rebuild || false;
         $buttons.hide('slow');
         throbber_on();
@@ -124,7 +124,8 @@ var plugin_searchindex = (function() {
                 if (rebuild === true) {
                     clear();
                 } else {
-                    // just start indexing
+                    force = 'f';
+                    // just start indexing immediately
                     window.setTimeout(index,1000);
                 }
             } else {

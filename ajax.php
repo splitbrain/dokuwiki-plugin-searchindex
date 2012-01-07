@@ -101,10 +101,14 @@ function ajax_clearindex() {
  */
 function ajax_indexpage() {
     global $conf;
+    $force = false;
 
     if (!$_POST['page']) {
         print 'true';
         exit;
+    }
+    if (isset($_POST['force'])) {
+        $force = $_POST['force'] == 'true';
     }
 
     // keep running
@@ -125,7 +129,7 @@ function ajax_indexpage() {
     }
 
     // do the work
-    $success = idx_addPage($_POST['page'], false, false);
+    $success = idx_addPage($_POST['page'], false, $force);
 
     // we're finished
     if (INDEXER_VERSION < 4){
