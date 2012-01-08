@@ -104,7 +104,7 @@ function ajax_indexpage() {
     $force = false;
 
     if (!$_POST['page']) {
-        print 'true';
+        print 0;
         exit;
     }
     if (isset($_POST['force'])) {

@@ -124,7 +124,7 @@ var plugin_searchindex = (function() {
                 if (rebuild === true) {
                     clear();
                 } else {
-                    force = 'f';
+                    force = '';
                     // just start indexing immediately
                     window.setTimeout(index,1000);
                 }
