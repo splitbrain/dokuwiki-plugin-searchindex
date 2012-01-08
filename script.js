@@ -2,155 +2,156 @@
  * Javascript for searchindex manager plugin
  *
  * @author Andreas Gohr <andi@splitbrain.org>
+ * @author Symon Bent <hendrybadao@gmail.com>
+ *     Complete rewrite using jQuery and revealing module pattern
+ *     Separate update and rebuild options
  */
 
-var plugin_searchindex = {
+var plugin_searchindex = (function() {
 
-    // hold some values
-    pages: null,
-    page:  null,
-    sack:  null,
-    done:  1,
-    count: 0,
-    output: null,
-    lang: null,
+    // public methods/properties
+    var pub = {};
+
+    // private vars
+    var pages = null,
+        page =  null,
+        url =  null,
+        done =  1,
+        count = 0,
+        $msg = null,
+        $buttons = null,
+        lang = null;
+        force = '';
 
     /**
      * initialize everything
      */
-    init: function(){
-        plugin_searchindex.output = $('plugin__searchindex');
-        if(!plugin_searchindex.output) return;
+    pub.init = function() {
+        $msg = jQuery('#plugin__searchindex_msg');
+        if( ! $msg) return;
 
-        plugin_searchindex.sack = new sack(DOKU_BASE + 'lib/plugins/searchindex/ajax.php');
-        plugin_searchindex.sack.AjaxFailedAlert = '';
-        plugin_searchindex.sack.encodeURIString = false;
-        plugin_searchindex.lang = LANG.plugins.searchindex;
+        lang = LANG.plugins.searchindex;
+        url = DOKU_BASE + 'lib/plugins/searchindex/ajax.php';
 
-        // init interface
-        plugin_searchindex.status('<button id="plugin__searchindex_btn" class="button">'+plugin_searchindex.lang.rebuild+'</button>');
-        addEvent($('plugin__searchindex_btn'),'click',plugin_searchindex.go);
-    },
+        $buttons = jQuery('#plugin__searchindex_buttons');
+
+        // init interface events
+        jQuery('#plugin__searchindex_update').click(pub.update);
+        jQuery('#plugin__searchindex_rebuild').click(pub.rebuild);
+    };
 
     /**
      * Gives textual feedback
      */
-    status: function(text){
-        plugin_searchindex.output.innerHTML = text;
-    },
-
-    /**
-     * Callback.
-     * Executed when the index was cleared.
-     * Starts the indexing
-     */
-    cb_clear: function(){
-        var ok = this.response;
-        if(ok == 1){
-            // start indexing
-            window.setTimeout(plugin_searchindex.index,1000);
-        }else{
-            plugin_searchindex.status(ok);
-            // retry
-            window.setTimeout(plugin_searchindex.clear,5000);
+    var message = function(text) {
+        if (text.charAt(0) !== '<') {
+            text = '<p>' + text + '</p>'
         }
-    },
-
-    /**
-     * Callback.
-     * Executed when the list of pages came back.
-     * Starts the index clearing
-     */
-    cb_pages: function(){
-        var data = this.response;
-        plugin_searchindex.pages = data.split("\n");
-        plugin_searchindex.count = plugin_searchindex.pages.length;
-        plugin_searchindex.status(plugin_searchindex.lang.pages.replace(/%d/,plugin_searchindex.pages.length));
-
-        // move the first page from the queue
-        plugin_searchindex.page = plugin_searchindex.pages.shift();
-
-        // start index cleaning
-        window.setTimeout(plugin_searchindex.clear,1000);
-    },
-
-    /**
-     * Callback.
-     * Returned after indexing one page
-     * Calls the next index run.
-     */
-    cb_index: function(){
-        var ok = this.response;
-        var wait = 500;
-        if(ok == 1){
-            // next page from queue
-            plugin_searchindex.page = plugin_searchindex.pages.shift();
-            plugin_searchindex.done++;
-        }else{
-            // something went wrong, show message
-            plugin_searchindex.status(ok);
-            wait = 5000;
-        }
-        // next index run
-        window.setTimeout(plugin_searchindex.index,500);
-    },
+        $msg.html(text);
+    };
 
     /**
      * Starts the indexing of a page.
      */
-    index: function(){
-        if(plugin_searchindex.page){
-            plugin_searchindex.status(plugin_searchindex.lang.indexing+' <b>'+plugin_searchindex.page+'</b> ('+plugin_searchindex.done+'/'+plugin_searchindex.count+')');
-            plugin_searchindex.sack.onCompletion = plugin_searchindex.cb_index;
-            plugin_searchindex.sack.URLString = '';
-            plugin_searchindex.sack.runAJAX('call=indexpage&page='+encodeURI(plugin_searchindex.page));
-        }else{
-            // we're done
-            plugin_searchindex.throbber_off();
-            plugin_searchindex.status(plugin_searchindex.lang.done);
+    var index = function() {
+        if (page) {
+            jQuery.post(url, 'call=indexpage&page=' + encodeURI(page) + '&force=' + force, function(response) {
+                var wait = 250;
+                // next page from queue
+                page = pages.shift();
+                done++;
+
+                var msg = (response !== 'true') ? lang.notindexed : lang.indexed;
+                status = '<p class="status">' + msg + '</p>';
+                message('<p>' + lang.indexing + ' ' + done + '/' + count + '</p><p class="name">' + page + '</p>' + status);
+                // next index run
+                window.setTimeout(index, wait);
+            });
+        } else {
+            finished();
         }
-    },
+    };
 
+    var finished = function() {
+        // we're done
+        throbber_off();
+        message(lang.done);
+        window.setTimeout(function() {
+            message('');
+            $buttons.show('slow');
+        }, 3000);
+    };
     /**
-     * Cleans the index
+     * Cleans the index (ready for complete rebuild)
      */
-    clear: function(){
-        plugin_searchindex.status(plugin_searchindex.lang.clearing);
-        plugin_searchindex.sack.onCompletion = plugin_searchindex.cb_clear;
-        plugin_searchindex.sack.URLString = '';
-        plugin_searchindex.sack.runAJAX('call=clearindex');
-    },
+    var clear = function() {
+        message(lang.clearing);
+        jQuery.post(url, 'call=clearindex', function(response) {
+            if (response !== 'true') {
+                message(response);
+                // retry
+                window.setTimeout(clear,5000);
+            } else {
+                // start indexing
+                force = 'true';
+                window.setTimeout(index,1000);
+            }
+        });
+    };
 
+    pub.rebuild = function() {
+        pub.update(true);
+    };
     /**
-     * Starts the whole index rebuild process
+     * Starts the index update
      */
-    go: function(){
-        plugin_searchindex.throbber_on();
-        plugin_searchindex.status(plugin_searchindex.lang.finding);
-        plugin_searchindex.sack.onCompletion = plugin_searchindex.cb_pages;
-        plugin_searchindex.sack.URLString = '';
-        plugin_searchindex.sack.runAJAX('call=pagelist');
-    },
+    pub.update = function(rebuild) {
+        done = 1;
+        rebuild = rebuild || false;
+        $buttons.hide('slow');
+        throbber_on();
+        message(lang.finding);
+        jQuery.post(url, 'call=pagelist', function(response) {
+            if (response !== 'true') {
+                pages = response.split("\n");
+                count = pages.length;
+                message(lang.pages.replace(/%d/, pages.length));
+
+                // move the first page from the queue
+                page = pages.shift();
+
+                // complete index rebuild?
+                if (rebuild === true) {
+                    clear();
+                } else {
+                    force = '';
+                    // just start indexing immediately
+                    window.setTimeout(index,1000);
+                }
+            } else {
+                finished();
+            }
+        });
+    };
 
     /**
      * add a throbber image
      */
-    throbber_on: function(){
-        plugin_searchindex.output.style['background-image'] = "url('"+DOKU_BASE+'lib/images/throbber.gif'+"')";
-        plugin_searchindex.output.style['background-repeat'] = 'no-repeat';
-    },
+    var throbber_on = function() {
+        $msg.addClass('updating');
+    };
 
     /**
      * Stop the throbber
      */
-    throbber_off: function(){
-        plugin_searchindex.output.style['background-image'] = 'none';
-    }
-};
+    var throbber_off = function() {
+        $msg.removeClass('updating');
+    };
 
-addInitEvent(function(){
+    // return only public methods/properties
+    return pub;
+})();
+
+jQuery(function() {
     plugin_searchindex.init();
 });
-
-
-//Setup VIM: ex: et ts=4 enc=utf-8 :
