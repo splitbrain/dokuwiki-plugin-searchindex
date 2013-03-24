@@ -27,7 +27,7 @@ class admin_plugin_searchindex extends DokuWiki_Admin_Plugin {
      * output appropriate html
      */
     function html() {
-        echo $this->plugin_locale_xhtml('intro');
+        echo $this->locale_xhtml('intro');
 
         echo '<div id="plugin__searchindex">';
         echo '<div class="buttons" id="plugin__searchindex_buttons">' .
