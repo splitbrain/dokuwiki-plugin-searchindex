@@ -1,0 +1,8 @@
+====== SearchIndex Manager ======
+
+Denne side tillader dig at opdatere eller genopbygge indekset, som benyttes af fuldtekst-søgningen.
+Dette er som regel ikke nødvendigt, da indekset opbygger og opdaterer sig selv, i mens brugere gennemser din wiki. Hvis du dog netop har opgraderet, tilføjet eller fjernet mange filer, kan det være en god ide at rydde op i indekset.
+
+Genopbygning af indekset **kan tage lang tid**. Du bør holde siden åben, indtil indekseringen er færdig.
+
+//NOTE: Denne manager har brug for en opdateret browser, da den gør brug af moderne JavaScript til at udføre adskillige baggrundsopgaver (vha. [[wp>AJAX]]).//
