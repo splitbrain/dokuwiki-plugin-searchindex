@@ -10,6 +10,7 @@ $lang['update']                = 'Index の更新';
 $lang['update_tip']            = 'Searchindex の更新のみ（普通は早い）';
 $lang['rebuild']               = 'Index の再作成';
 $lang['rebuild_tip']           = 'Searchindex を初期化後、再作成';
+$lang['js']['indexing']        = '更新済： ';
 $lang['js']['done']            = '更新完了';
 $lang['js']['pages']           = '%d ページあります。';
 $lang['js']['clearing']        = 'Index の初期化中';
