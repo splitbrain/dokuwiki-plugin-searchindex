@@ -1,0 +1,8 @@
+====== Sökindexhanterare ======
+
+Denna sida låter dig uppdatera eller återuppbygga indexeringen som används vid fulltextsökning.
+Detta är oftast inte nödvändigt att utföra då indexet byggs på och uppdateras när besökare surfar på din wiki. Om du emellertid nyligen uppgraderat, lagt till eller tagit bort många filer kan det vara vettigt att rensa upp i indexet.
+
+Att återuppbygga index **kan ta lång tid**. Du bör lämna sidan öppen, tills indexeringen är färdig.
+
+//NOTERA: Detta verktyg kräver en uppdaterad webbläsare, då det använder modern JavaScript-teknik för att i bakgrunden utföra multipla åtgärder (använder [[wp>AJAX]]).//
