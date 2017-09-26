@@ -1,4 +1,4 @@
-====== Administrador del Índice de Búsqueda ======
+====== Administrador del índice de búsqueda ======
 
 Esta página le permite actualizar o volver a generar el índice utilizado por la búsqueda de texto completo. Esto, generalmente no es necesario, ya que el índice se construye y actualiza automáticamente cuando los usuarios navegan por su wiki. Sin embargo, si usted acaba de actualizar, agregar o eliminar una gran cantidad de páginas pueden ser una buena idea limpiar el índice.
 
