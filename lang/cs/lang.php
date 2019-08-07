@@ -5,6 +5,7 @@
  *
  * @author Robert Surý <rsurycz@seznam.cz>
  */
+$lang['menu']                  = 'Search Index Manager';
 $lang['update']                = 'Aktualizovat index';
 $lang['update_tip']            = 'Jen aktualizovat vyhledávací index (obvykle rychlejší)';
 $lang['rebuild']               = 'Znovu vytvořit index';

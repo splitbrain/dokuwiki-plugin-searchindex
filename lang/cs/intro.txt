@@ -1,0 +1,8 @@
+====== Search Index Manager ======
+
+Tato stránka umožňuje aktualizovat nebo znovu vytvořit index používaný při fulltextovém vyhledávání.
+To obvykle není potřeba, protože se index vytváří a aktualizuje sám jak uživatelé procházejí vaší wiki. Pokud jste však upgradovali, přidali nebo odstranili mnoho souborů může být dobrý nápad vyčistit index.
+
+Opětovné vytvoření indexu **může trvat dlouho**. Měli byste nechat stránku otevřenou dokud indexování neskončí.
+
+// POZNÁMKA: Tato aplikace potřebuje nejnovější prohlížeč, protože využívá moderní JavaScript pro provádění více úkolů na pozadí (pomocí [[wp>AJAX]]).//
