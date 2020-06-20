@@ -13,11 +13,6 @@ if (!count($_POST) && $HTTP_RAW_POST_DATA) {
 
 if (!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__).'/../../../').'/');
 require_once(DOKU_INC.'inc/init.php');
-require_once(DOKU_INC.'inc/common.php');
-require_once(DOKU_INC.'inc/pageutils.php');
-require_once(DOKU_INC.'inc/auth.php');
-require_once(DOKU_INC.'inc/search.php');
-require_once(DOKU_INC.'inc/indexer.php');
 
 //close sesseion
 session_write_close();
