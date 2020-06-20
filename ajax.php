@@ -7,25 +7,25 @@
  */
 
 //fix for Opera XMLHttpRequests
-if(!count($_POST) && $HTTP_RAW_POST_DATA){
-  parse_str($HTTP_RAW_POST_DATA, $_POST);
+if (!count($_POST) && $HTTP_RAW_POST_DATA) {
+    parse_str($HTTP_RAW_POST_DATA, $_POST);
 }
 
-if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../../').'/');
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
+if (!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__).'/../../../').'/');
 require_once(DOKU_INC.'inc/init.php');
 require_once(DOKU_INC.'inc/common.php');
 require_once(DOKU_INC.'inc/pageutils.php');
 require_once(DOKU_INC.'inc/auth.php');
 require_once(DOKU_INC.'inc/search.php');
 require_once(DOKU_INC.'inc/indexer.php');
+
 //close sesseion
 session_write_close();
 
 header('Content-Type: text/plain; charset=utf-8');
 
 //we only work for admins!
-if (auth_quickaclcheck($conf['start']) < AUTH_ADMIN){
+if (auth_quickaclcheck($conf['start']) < AUTH_ADMIN) {
     die('access denied');
 }
 
@@ -42,12 +42,13 @@ if (function_exists($call)) {
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function ajax_pagelist(){
+function ajax_pagelist()
+{
     global $conf;
     $data = array();
     search($data,$conf['datadir'], 'search_allpages', array());
 
-    foreach($data as $val) {
+    foreach ($data as $val) {
         print $val['id']."\n";
     }
 }
@@ -55,14 +56,15 @@ function ajax_pagelist(){
 /**
  * Clear all index files
  */
-function ajax_clearindex() {
+function ajax_clearindex()
+{
     global $conf;
     // keep running
     @ignore_user_abort(true);
 
     // acquire a lock
     $lock = $conf['lockdir'] . '/_indexer.lock';
-    while (!@mkdir($lock)){
+    while (!@mkdir($lock)) {
         if (time()-@filemtime($lock) > 60*5) {
             // looks like a stale lock - remove it
             @rmdir($lock);
@@ -99,7 +101,8 @@ function ajax_clearindex() {
  * We're doing basicly the same as the real indexer but ignore the
  * last index time here
  */
-function ajax_indexpage() {
+function ajax_indexpage()
+{
     global $conf;
     $force = false;
 
@@ -115,9 +118,9 @@ function ajax_indexpage() {
     @ignore_user_abort(true);
 
     // try to aquire a lock (newer releases do the locking in idx_addPage)
-    if (INDEXER_VERSION < 4){
+    if (INDEXER_VERSION < 4) {
         $lock = $conf['lockdir'].'/_indexer.lock';
-        while (!@mkdir($lock)){
+        while (!@mkdir($lock)) {
             if (time()-@filemtime($lock) > 60*5) {
                 // looks like a stale lock - remove it
                 @rmdir($lock);
@@ -132,7 +135,7 @@ function ajax_indexpage() {
     $success = idx_addPage($_POST['page'], false, $force);
 
     // we're finished
-    if (INDEXER_VERSION < 4){
+    if (INDEXER_VERSION < 4) {
         io_saveFile(metaFN($id,'.indexed'),'');
         @rmdir($lock);
     }
