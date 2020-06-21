@@ -6,6 +6,8 @@
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
 
+use dokuwiki\Search\Indexer;
+
 //fix for Opera XMLHttpRequests
 if (!count($_POST) && $HTTP_RAW_POST_DATA) {
     parse_str($HTTP_RAW_POST_DATA, $_POST);
@@ -41,7 +43,7 @@ function ajax_pagelist()
 {
     global $conf;
     $data = array();
-    search($data,$conf['datadir'], 'search_allpages', array());
+    search($data, $conf['datadir'], 'search_allpages', array());
 
     foreach ($data as $val) {
         print $val['id']."\n";
@@ -57,37 +59,23 @@ function ajax_clearindex()
     // keep running
     @ignore_user_abort(true);
 
-    // acquire a lock
-    $lock = $conf['lockdir'] . '/_indexer.lock';
-    while (!@mkdir($lock)) {
-        if (time()-@filemtime($lock) > 60*5) {
-            // looks like a stale lock - remove it
-            @rmdir($lock);
-        } else {
-            print 'indexer is locked.';
-            exit;
-        }
+    if (is_callable('dokuwiki\Search\Indexer::getInstance')) {
+        $Indexer = Indexer::getInstance();
+    } elseif (class_exists('Doku_Indexer')) {
+        $Indexer = idx_get_indexer();
+    } else {
+       // Failed to clear index. Your DokuWiki is older than release 2011-05-25 "Rincewind"
+       exit;
     }
 
-    io_saveFile($conf['indexdir'].'/page.idx','');
-    io_saveFile($conf['indexdir'].'/title.idx','');
-    io_saveFile($conf['indexdir'].'/pageword.idx','');
-    io_saveFile($conf['indexdir'].'/metadata.idx','');
-    $dir = @opendir($conf['indexdir']);
-    if ($dir!==false) {
-        while (($f = readdir($dir)) !== false) {
-            if (substr($f,-4)=='.idx' &&
-               (substr($f,0,1)=='i' || substr($f,0,1)=='w'
-               || substr($f,-6)=='_w.idx' || substr($f,-6)=='_i.idx' || substr($f,-6)=='_p.idx'))
-                @unlink($conf['indexdir']."/$f");
-        }
+    if (is_callable([$Indexer, 'clear'])) {
+        $success = $Indexer->clear();
+    } else {
+       // Failed to clear index. Your DokuWiki is older than release 2013-05-10 "Weatherwax"
+        $success = false;
     }
-    @unlink($conf['indexdir'].'/lengths.idx');
 
-    // we're finished
-    @rmdir($lock);
-
-    print 'true';
+    print ($success !== false) ? 'true' : '';
 }
 
 /**
@@ -112,27 +100,14 @@ function ajax_indexpage()
     // keep running
     @ignore_user_abort(true);
 
-    // try to aquire a lock (newer releases do the locking in idx_addPage)
-    if (INDEXER_VERSION < 4) {
-        $lock = $conf['lockdir'].'/_indexer.lock';
-        while (!@mkdir($lock)) {
-            if (time()-@filemtime($lock) > 60*5) {
-                // looks like a stale lock - remove it
-                @rmdir($lock);
-            } else {
-                print 'indexer is locked.';
-                exit;
-            }
-        }
-    }
-
-    // do the work
-    $success = idx_addPage($_POST['page'], false, $force);
-
-    // we're finished
-    if (INDEXER_VERSION < 4) {
-        io_saveFile(metaFN($id,'.indexed'),'');
-        @rmdir($lock);
+    if (is_callable('dokuwiki\Search\Indexer::getInstance')) {
+        $Indexer = Indexer::getInstance();
+        $success = $Indexer->addPage($_POST['page'], false, $force);
+    } elseif (class_exists('Doku_Indexer')) {
+        $success = idx_addPage($_POST['page'], false, $force);
+    } else {
+       // Failed to index the page. Your DokuWiki is older than release 2011-05-25 "Rincewind"
+       exit;
     }
 
     print ($success !== false) ? 'true' : '';
