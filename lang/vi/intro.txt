@@ -1,0 +1,10 @@
+====== Trình quản lý chỉ mục tìm kiếm ======
+
+Trang này cho phép bạn cập nhật hoặc xây dựng lại chỉ mục được sử dụng bởi tìm kiếm toàn văn full-text.
+Điều này thường không cần thiết vì chỉ mục tự xây dựng và cập nhật khi mọi người dùng duyệt wiki của bạn. Tuy nhiên nếu bạn vừa nâng cấp, thêm bớt rất nhiều tệp, có thể nên dọn sạch chỉ mục.
+
+Việc xây dựng lại chỉ mục **có thể mất nhiều thời gian**. Bạn nên để trang mở
+cho đến khi việc lập chỉ mục kết thúc.
+
+// LƯU Ý: Trình quản lý này cần một trình duyệt mới vì nó sử dụng JavaScript hiện đại
+để thực hiện nhiều tác vụ dưới nền (sử dụng [[wp>AJAX]]).//
