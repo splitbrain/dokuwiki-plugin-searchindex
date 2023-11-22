@@ -1,0 +1,8 @@
+====== Manager pentru SearchIndex ======
+
+Această pagină îți permite să actualizezi sau să refaci indexul folosit de funcția de căutare.
+În general, acest lucru nu este necesar, deoarece indexul se construiește și se actualizează singur pe măsură ce utilizatorii accesează paginile acestui wiki. Cu toate acestea, după actualizarea, adăugarea sau eliminarea unui număr mare de fișiere, actualizarea indexului poate fi recomandată.
+
+Actualizarea indexului **poate dura mult timp**. Lasă pagina deschisă până la finalizarea indexării.
+
+//NOTĂ: Acest manager are nevoie de un browser recent, deoarece folosește JavaScript pentru a efectua mai multe sarcini în fundal (folosind [[wp>AJAX]]).//
