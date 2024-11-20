@@ -16,7 +16,7 @@ if (!count($_POST) && $HTTP_RAW_POST_DATA) {
 if (!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__).'/../../../').'/');
 require_once(DOKU_INC.'inc/init.php');
 
-//close sesseion
+//close session
 session_write_close();
 
 header('Content-Type: text/plain; charset=utf-8');
