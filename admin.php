@@ -1,12 +1,14 @@
 <?php
 
+use dokuwiki\Extension\AdminPlugin;
+
 /**
  * DokuWiki Searchindex Manager
- * 
+ *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Andreas Gohr <andi@splitbrain.org>
  */
-class admin_plugin_searchindex extends DokuWiki_Admin_Plugin
+class admin_plugin_searchindex extends AdminPlugin
 {
     /**
      * return sort order for position in admin menu
@@ -28,17 +30,11 @@ class admin_plugin_searchindex extends DokuWiki_Admin_Plugin
      */
     public function html()
     {
+        $this->setupLocale();
         echo $this->locale_xhtml('intro');
-
-        echo '<div id="plugin__searchindex">';
-        echo '<div class="buttons" id="plugin__searchindex_buttons">';
-        echo '<input type="button" class="button" id="plugin__searchindex_rebuild" value="' . $this->getLang('rebuild') . '"/>';
-        echo '<p>' . $this->getLang('rebuild_tip') . '</p>';
-        echo '<input type="button" class="button" id="plugin__searchindex_update" value="' . $this->getLang('update') . '"/>';
-        echo '<p>' . $this->getLang('update_tip') . '</p>';
-        echo '</div>';
-        echo '<div class="msg" id="plugin__searchindex_msg"></div>';
-        echo '</div>';
+        echo '<searchindex-manager id="plugin__searchindex"' .
+            ' lang="' . htmlspecialchars(json_encode($this->lang)) . '"' .
+            ' url="' . DOKU_BASE . 'lib/plugins/searchindex/ajax.php"' .
+            '></searchindex-manager>';
     }
 }
-//Setup VIM: ex: et ts=4 enc=utf-8 :
