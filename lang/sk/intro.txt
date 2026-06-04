@@ -1,0 +1,12 @@
+====== Správca SearchIndex ======
+
+Táto stránka umožňuje aktualizovať alebo prebudovať index používaný fulltextovým vyhľadávaním.
+Zvyčajne to nie je potrebné, pretože index sa zostavuje a aktualizuje sám,
+keď používatelia prehliadajú vašu wiki. Ak ste však práve aktualizovali, pridali alebo odstránili
+veľa súborov, môže byť dobré index vyčistiť.
+
+Prebudovanie indexu **môže trvať dlho**. Stránku by ste mali nechať otvorenú,
+kým sa indexovanie nedokončí.
+
+//POZNÁMKA: Tento správca vyžaduje novší prehliadač, pretože využíva moderný JavaScript
+na vykonávanie viacerých úloh na pozadí (pomocou [[wp>AJAX]]).//
