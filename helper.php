@@ -32,13 +32,8 @@ class helper_plugin_searchindex extends Plugin
     public function clearIndex(): bool
     {
         try {
-            if (class_exists('\dokuwiki\Search\Indexer')) {
-                (new \dokuwiki\Search\Indexer())->clear();
-                return true;
-            } else {
-                $indexer = idx_get_indexer();
-                return $indexer->clear() !== false;
-            }
+            (new \dokuwiki\Search\Indexer())->clear();
+            return true;
         } catch (\Exception $e) {
             return false;
         }
@@ -61,11 +56,7 @@ class helper_plugin_searchindex extends Plugin
         }
 
         try {
-            if (class_exists('\dokuwiki\Search\Indexer')) {
-                return (new \dokuwiki\Search\Indexer())->addPage($page, $force);
-            } else {
-                return idx_addPage($page, false, $force) !== false;
-            }
+            return (new \dokuwiki\Search\Indexer())->addPage($page, $force);
         } catch (\Exception $e) {
             return false;
         }
