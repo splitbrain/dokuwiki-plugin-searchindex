@@ -31,8 +31,17 @@ class helper_plugin_searchindex extends Plugin
      */
     public function clearIndex(): bool
     {
-        $indexer = idx_get_indexer();
-        return $indexer->clear() !== false;
+        try {
+            if (class_exists('\dokuwiki\Search\Indexer')) {
+                (new \dokuwiki\Search\Indexer())->clear();
+                return true;
+            } else {
+                $indexer = idx_get_indexer();
+                return $indexer->clear() !== false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -51,6 +60,14 @@ class helper_plugin_searchindex extends Plugin
             return false;
         }
 
-        return idx_addPage($page, false, $force) !== false;
+        try {
+            if (class_exists('\dokuwiki\Search\Indexer')) {
+                return (new \dokuwiki\Search\Indexer())->addPage($page, $force);
+            } else {
+                return idx_addPage($page, false, $force) !== false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
