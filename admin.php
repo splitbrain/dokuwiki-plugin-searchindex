@@ -35,6 +35,7 @@ class admin_plugin_searchindex extends AdminPlugin
         echo '<searchindex-manager id="plugin__searchindex"' .
             ' lang="' . htmlspecialchars(json_encode($this->lang)) . '"' .
             ' url="' . DOKU_BASE . 'lib/plugins/searchindex/ajax.php"' .
+            ' sectok="' . getSecurityToken() . '"' .
             '></searchindex-manager>';
     }
 }

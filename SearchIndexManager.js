@@ -9,6 +9,7 @@ class SearchIndexManager extends HTMLElement {
     #pages = null;
     #page = null;
     #url = null;
+    #sectok = '';
     #done = 1;
     #count = 0;
     #$msg = null;
@@ -31,6 +32,7 @@ class SearchIndexManager extends HTMLElement {
     connectedCallback() {
         this.#lang = {...this.#lang, ...JSON.parse(this.getAttribute('lang'))};
         this.#url = this.getAttribute('url');
+        this.#sectok = this.getAttribute('sectok');
         this.#render();
         this.#$msg = this.querySelector('.msg');
         this.#$buttons = this.querySelector('.buttons');
@@ -73,7 +75,7 @@ class SearchIndexManager extends HTMLElement {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: params
+            body: `${params}&sectok=${encodeURIComponent(this.#sectok)}`
         });
         return response.json();
     }

@@ -15,6 +15,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 // we only work for admins!
 if(!auth_isadmin()) throw new Exception('access denied');
+if(!checkSecurityToken()) throw new Exception('invalid security token');
 
 /** @var helper_plugin_searchindex $helper */
 $helper = plugin_load('helper', 'searchindex');
