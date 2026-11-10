@@ -5,4 +5,4 @@ To obvykle není potřeba, protože se index vytváří a aktualizuje sám jak u
 
 Opětovné vytvoření indexu **může trvat dlouho**. Měli byste nechat stránku otevřenou dokud indexování neskončí.
 
-// POZNÁMKA: Tato aplikace potřebuje nejnovější prohlížeč, protože využívá moderní JavaScript pro provádění více úkolů na pozadí (pomocí [[wp>AJAX]]).//
+//POZNÁMKA: Tato aplikace potřebuje nejnovější prohlížeč, protože využívá moderní JavaScript pro provádění více úkolů na pozadí (pomocí [[wp>AJAX]]).//

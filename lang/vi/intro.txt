@@ -6,5 +6,5 @@ Trang này cho phép bạn cập nhật hoặc xây dựng lại chỉ mục đ�
 Việc xây dựng lại chỉ mục **có thể mất nhiều thời gian**. Bạn nên để trang mở
 cho đến khi việc lập chỉ mục kết thúc.
 
-// LƯU Ý: Trình quản lý này cần một trình duyệt mới vì nó sử dụng JavaScript hiện đại
+//LƯU Ý: Trình quản lý này cần một trình duyệt mới vì nó sử dụng JavaScript hiện đại
 để thực hiện nhiều tác vụ dưới nền (sử dụng [[wp>AJAX]]).//
