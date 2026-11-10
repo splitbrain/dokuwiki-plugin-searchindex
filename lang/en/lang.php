@@ -17,3 +17,5 @@ $lang['clearing'] = 'Clearing index...';
 $lang['finding']  = 'Finding pages...';
 $lang['notindexed']  = 'Skipped: Up-to-date';
 $lang['indexed']     = 'Updated';
+$lang['error']       = 'Error:';
+$lang['aborted']     = 'Indexing stopped because of too many errors.';
